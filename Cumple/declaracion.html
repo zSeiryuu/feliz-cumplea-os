@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Quieres ser mi novia? - Lirio Violeta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            /* Mismo fondo de lirios */
+            background-image: url('imagenes/dreamstime_m_278262954.jpeg'); 
+            background-size: cover;          
+            background-position: center;    
+            background-repeat: no-repeat;    
+            background-attachment: fixed;    
+            
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        /* Capa translúcida */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(255, 255, 255, 0.38); 
+            z-index: 1;
+        }
+
+        /* --- PARTÍCULAS DE FONDO --- */
+        .particles-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: 2; 
+            pointer-events: none; 
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(186, 150, 230, 0.9), 0 0 18px rgba(255, 255, 255, 0.8);
+            animation: floatParticle linear infinite;
+        }
+
+        .particle:nth-child(1)  { width: 8px;  height: 8px;  left: 5%;  animation-duration: 3.5s; animation-delay: 0s; }
+        .particle:nth-child(2)  { width: 12px; height: 12px; left: 15%; animation-duration: 2.8s; animation-delay: 1.2s; }
+        .particle:nth-child(3)  { width: 6px;  height: 6px;  left: 25%; animation-duration: 4.0s; animation-delay: 0.5s; }
+        .particle:nth-child(4)  { width: 10px; height: 10px; left: 35%; animation-duration: 3.2s; animation-delay: 1.8s; }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(105vh) scale(0.4); opacity: 0; }
+            15%, 85% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.3); opacity: 0; }
+        }
+
+        /* --- TARJETA PRINCIPAL --- */
+        .main-card {
+            background: rgba(255, 255, 255, 0.95); 
+            border: 4.5px solid #5d3d8a; 
+            border-radius: 38px;
+            width: 90%;
+            max-width: 750px;
+            padding: 35px 30px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(93, 61, 138, 0.25); 
+            position: relative;
+            z-index: 3; 
+            animation: fadeInScale 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* PERSONAJE DECORATIVO ARRIBA */
+        .character-img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 5px;
+            animation: movimientoSuave 3s ease-in-out infinite alternate;
+        }
+
+        /* TÍTULOS Y TEXTO */
+        h1 {
+            color: #4a3c63; 
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        .proposal-text {
+            color: #5d3d8a;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            background: #f4f2f8;
+            padding: 20px;
+            border-radius: 20px;
+            border: 2px dashed #d8cced;
+            text-align: left;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        /* --- BOTONES DE RESPUESTA --- */
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            min-height: 50px;
+            align-items: center;
+        }
+
+        .btn-yes {
+            background: #5d3d8a;
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(93, 61, 138, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-yes:hover {
+            background: #7e5fbf;
+            transform: scale(1.1);
+        }
+
+        .btn-no {
+            background: #e6dfec;
+            color: #5d3d8a;
+            border: 2px solid #5d3d8a;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: absolute;
+        }
+
+        /* --- MENSAJE DE ÉXITO (OCULTO AL INICIO) --- */
+        .success-message {
+            display: none;
+            animation: fadeInScale 0.8s ease forwards;
+        }
+
+        .success-message h2 {
+            color: #4a3c63;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .success-message p {
+            color: #5d3d8a;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Contenedor de botones en la sección de éxito */
+        .success-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        /* Estilo para el botón adicional */
+        .btn-extra {
+            background: #7e5fbf;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(93, 61, 138, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-extra:hover {
+            background: #5d3d8a;
+            transform: scale(1.08);
+        }
+
+        /* --- BOTÓN DE REGRESO --- */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            right: 22px;
+            background: #5d3d8a;
+            color: white;
+            text-decoration: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(93, 61, 138, 0.3);
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+
+        .back-btn:hover {
+            background: #7e5fbf;
+            transform: scale(1.12) rotate(10deg);
+        }
+
+        /* --- ANIMACIONES --- */
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes movimientoSuave {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-6px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-card {
+                padding: 25px 15px;
+                width: 95%;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+            .proposal-text {
+                max-height: 220px;
+                font-size: 0.88rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" src="musica/declaracion.mp3" loop preload="auto"></audio>
+
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="main-card">
+        <a href="index.html" class="back-btn" title="Menú Principal">🏠</a>
+
+        <div id="question-section">
+            <img src="imagenes/zorroenamorado.jpg" alt="Pochacco enamorado" class="character-img">
+            <h1>¿QUIERES SER OFICIALMENTE MI NOVIA?</h1>
+            
+            <div class="proposal-text">
+                Desde el primer instante en que coincidimos supe que eras tú, y hoy que miramos hacia adelante quiero decirte que no va a ser fácil. Va a ser muy difícil vamos a trabajar en esto todos los días, pero quiero hacerlo porque te quiero. Te quiero por completo, para siempre, todos los días. No me enamore de la distancia, yo me enamore de tu manera de existir, a veces pienso que nuestros nombres se estuvieron buscando durante años, sin que nosotros lo supieramos. Prometo ayudarte a amar la vida a tratarte siempre con ternura y tener la paciencia que el amor requiere, hablar cuando sea necesario y a compartir el silencio cuando no, a estar de acuerdo o no y a vivir en la calidez de tu corazón que siempre sera mi hogar. Prometo amarte apasionadamente en todas las formas ahora y para siempre prometo nunca olvidar que este es un amor para toda la vida y saber siempre que en lo profundo de mi alma no importa que nos pueda separar siempre nos volveremos a encontrar el uno al otro. Tú eres mi camino, y siempre vas a ser mi camino por eso, Se que el camino va a ser difícil y que nos queda mucho por delante, pero a pesar de las dificultades te voy a elegir a ti y aunque tengamos problemas, vamos a solucionarlos, quiero que seas mi compañera de vida, mi alma gemela, mi futura esposa, solo a ti, solo tengo ojos para ti. Y con la ilusion de construir este futuro juntos, te encantaría acompañarme en esta travesia llamada vida y ser oficialmente mi pareja?
+            </div>
+
+            <div class="buttons-container" id="buttonsContainer">
+                <button class="btn-yes" onclick="sayYes()">¡SÍ, QUIERO! 🥰</button>
+                <button class="btn-no" id="btnNo" onmouseover="moveButton()" onclick="moveButton()">No 🙈</button>
+            </div>
+        </div>
+
+        <div id="success-section" class="success-message">
+            <img src="imagenes/zorroenamorado.jpg" alt="Pochacco feliz" class="character-img">
+            <h2>¡SABÍA QUE DIRÍAS QUE SÍ! 🎉</h2>
+            <p>
+                Oficialmente somos novios y mi corazón no puede estar más feliz. Gracias por elegirme, por este amor tan bonito y por todo lo que viene, eres mi compañera de vida, te deseo solo a ti amor. ¡Te amo muchísimo mi bonita! 💜✨
+            </p>
+            <div class="success-buttons">
+                <a href="ilove.html" class="btn-extra"> Espero te haya gustado, presiona aqui para llegar al fin de la sorpresa 💌</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configurar volumen bajito (0.25) para que no sature y puedas hablar tranquilamente
+        window.addEventListener('DOMContentLoaded', () => {
+            const music = document.getElementById('bgMusic');
+            music.volume = 0.25;
+            
+            // Intento de reproducción automática al cargar
+            music.play().catch(() => {
+                // Si el navegador bloquea el autoplay por políticas, se activará en el primer clic/toque en cualquier parte
+                document.body.addEventListener('click', () => {
+                    music.play();
+                }, { once: true });
+            });
+        });
+
+        function moveButton() {
+            const btnNo = document.getElementById('btnNo');
+            const maxX = 130;
+            const maxY = 30;
+            
+            const randomX = (Math.random() - 0.5) * maxX * 2;
+            const randomY = (Math.random() - 0.5) * maxY * 2;
+            
+            btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        function sayYes() {
+            document.getElementById('question-section').style.display = 'none';
+            document.getElementById('success-section').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>

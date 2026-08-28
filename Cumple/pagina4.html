@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Te Dedico Esto Mi Niña - Lirio Violeta</title>
+    <!-- Fuente amigable y moderna -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            /* Mismo fondo de lirios */
+            background-image: url('imagenes/dreamstime_m_278262954.jpeg'); 
+            background-size: cover;          
+            background-position: center;    
+            background-repeat: no-repeat;    
+            background-attachment: fixed;    
+            
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Capa translúcida */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(255, 255, 255, 0.38); 
+            z-index: 1;
+        }
+
+        /* --- PARTÍCULAS DE FONDO --- */
+        .particles-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: 2; 
+            pointer-events: none; 
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(186, 150, 230, 0.9), 0 0 18px rgba(255, 255, 255, 0.8);
+            animation: floatParticle linear infinite;
+        }
+
+        .particle:nth-child(1)  { width: 8px;  height: 8px;  left: 5%;  animation-duration: 3.5s; animation-delay: 0s; }
+        .particle:nth-child(2)  { width: 12px; height: 12px; left: 15%; animation-duration: 2.8s; animation-delay: 1.2s; }
+        .particle:nth-child(3)  { width: 6px;  height: 6px;  left: 25%; animation-duration: 4.0s; animation-delay: 0.5s; }
+        .particle:nth-child(4)  { width: 10px; height: 10px; left: 35%; animation-duration: 3.2s; animation-delay: 1.8s; }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(105vh) scale(0.4); opacity: 0; }
+            15%, 85% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.3); opacity: 0; }
+        }
+
+        /* --- TARJETA PRINCIPAL --- */
+        .main-card {
+            background: rgba(255, 255, 255, 0.94); 
+            border: 4.5px solid #5d3d8a; 
+            border-radius: 38px;
+            width: 95%;
+            max-width: 980px;
+            padding: 30px 30px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(93, 61, 138, 0.25); 
+            position: relative;
+            z-index: 3; 
+            animation: fadeInScale 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* TÍTULO PRINCIPAL */
+        h1 {
+            color: #4a3c63; 
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        /* --- CONTENEDOR DE LOS DOS BLOQUES DE TEXTO Y POCHACCO --- */
+        .dedication-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Cajas de texto estilo burbuja/tarjeta interna */
+        .text-box {
+            background: #f4f2f8;
+            border: 2px solid #d8cced;
+            border-radius: 24px;
+            padding: 20px;
+            text-align: left;
+            color: #4a3c63;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            box-shadow: 0 6px 15px rgba(93, 61, 138, 0.08);
+            position: relative;
+        }
+
+        /* Personaje central con destellos */
+        .center-character-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 0 10px;
+        }
+
+        .center-character-container img {
+            width: 120px;
+            height: auto;
+            animation: movimientoSuave 3s ease-in-out infinite alternate;
+        }
+
+        /* --- BOTÓN ESPECIAL PARA EL CÓDIGO DE RIOT --- */
+        .riot-btn {
+            background: #5d3d8a;
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(93, 61, 138, 0.3);
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .riot-btn:hover {
+            background: #7e5fbf;
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(93, 61, 138, 0.4);
+        }
+
+        /* --- VENTANA EMERGENTE (MODAL) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(74, 60, 99, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            border: 3px solid #5d3d8a;
+            border-radius: 25px;
+            padding: 30px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(93, 61, 138, 0.3);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content h3 {
+            color: #4a3c63;
+            margin-bottom: 12px;
+            font-size: 1.3rem;
+        }
+
+        .modal-content p {
+            color: #5d3d8a;
+            font-size: 1.05rem;
+            background: #f4f2f8;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px dashed #7e5fbf;
+            margin-bottom: 20px;
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        /* Contenedor para los botones del modal alineados */
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .close-modal-btn {
+            background: #5d3d8a;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .close-modal-btn:hover {
+            background: #7e5fbf;
+        }
+
+        /* Botón pequeño "Última sorpresa" */
+        .last-surprise-btn {
+            background: #e6dfec;
+            color: #5d3d8a;
+            border: 1.5px solid #5d3d8a;
+            padding: 8px 14px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .last-surprise-btn:hover {
+            background: #5d3d8a;
+            color: white;
+        }
+
+        /* --- BOTONES DE NAVEGACIÓN PRINCIPAL --- */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            right: 22px;
+            background: #5d3d8a;
+            color: white;
+            text-decoration: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(93, 61, 138, 0.3);
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+
+        .back-btn:hover {
+            background: #7e5fbf;
+            transform: scale(1.12) rotate(10deg);
+        }
+
+        .next-page-btn {
+            position: absolute;
+            top: 20px;
+            left: 22px;
+            background: #5d3d8a;
+            color: white;
+            text-decoration: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(93, 61, 138, 0.3);
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+
+        .next-page-btn:hover {
+            background: #7e5fbf;
+            transform: scale(1.12) rotate(-10deg);
+        }
+
+        /* --- ANIMACIONES --- */
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes movimientoSuave {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-6px); }
+        }
+
+        /* Responsive para celulares */
+        @media (max-width: 768px) {
+            .dedication-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .center-character-container {
+                margin: 5px 0;
+            }
+            h1 {
+                font-size: 1.5rem;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Partículas flotantes de fondo -->
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Contenedor Principal -->
+    <div class="main-card">
+        <!-- Botón para ir a la tarjeta anterior -->
+        <a href="fotos.html" class="next-page-btn" title="Anterior">⬅</a>
+
+        <!-- Botón para volver al menú principal -->
+        <a href="index.html" class="back-btn" title="Menú Principal">🏠</a>
+
+        <h1>TE DEDICO ESTO MI NIÑA</h1>
+
+        <!-- Contenido central dividido en dos bloques y el personaje -->
+        <div class="dedication-container">
+            <!-- Bloque de texto izquierdo -->
+            <div class="text-box">
+                A veces el destino decide cruzar dos caminos que venían de lugares muy distintos, y nos regala la certeza de haber encontrado un refugio seguro en medio del mundo. Construir esto a tu lado no se trata de que sea perfecto, sino de saber que, pase lo que pase, siempre nos elegiremos y estaremos dispuesto a remar al mismo ritmo, a sostener la mirada cuando haya dudas y a cuidar de lo que somos con paciencia y respeto.
+            </div>
+
+            <!-- Personaje al centro -->
+            <div class="center-character-container">
+                <img src="imagenes/images.jpeg" alt="Pochacco tierno">
+            </div>
+
+            <!-- Bloque de texto derecho -->
+            <div class="text-box">
+            
+                Me alegra inmensamente saber que, de entre todas las casualidades posibles, elegimos coincidir y apostar por esto que estamos creando. Que cada día que venga sea un espacio para seguir compartiendo risas, silencios cómodos y la complicidad de caminar con la seguridad de que, elijas lo que elijas, aquí tienes un compañero firme para todo lo que depare el camino.
+            </div>
+        </div>
+
+        <!-- Botón para abrir el código de Riot -->
+        <button class="riot-btn" onclick="openModal()">🎮 Ver Código Especial</button>
+    </div>
+
+    <!-- Ventana Emergente (Modal) -->
+    <div class="modal-overlay" id="riotModal">
+        <div class="modal-content">
+            <h3>Tu Código Especial</h3>
+            <!-- AQUÍ PUEDES CAMBIAR EL TEXTO POR TU CÓDIGO DE RIOT -->
+            <p>AQUÍ-VA-TU-CÓDIGO-DE-RIOT</p>
+            
+            <!-- Contenedor de botones (Última sorpresa a la izquierda y Cerrar a la derecha) -->
+            <div class="modal-buttons">
+                <a href="main.html" class="last-surprise-btn">✨ Última sorpresa</a>
+                <button class="close-modal-btn" onclick="closeModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script sencillo para abrir y cerrar la ventana -->
+    <script>
+        function openModal() {
+            document.getElementById('riotModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('riotModal').classList.remove('active');
+        }
+    </script>
+
+</body>
+</html>

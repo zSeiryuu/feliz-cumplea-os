@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Playlist - Lirio Violeta</title>
+    <!-- Fuente amigable y moderna -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            /* --- MISMO FONDO DE LIRIOS --- */
+            background-image: url('imagenes/dreamstime_m_278262954.jpeg'); 
+            background-size: cover;          
+            background-position: center;    
+            background-repeat: no-repeat;    
+            background-attachment: fixed;    
+            
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Capa translúcida */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(255, 255, 255, 0.38); 
+            z-index: 1;
+        }
+
+        /* --- PARTÍCULAS DE FONDO --- */
+        .particles-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: 2; 
+            pointer-events: none; 
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(186, 150, 230, 0.9), 0 0 18px rgba(255, 255, 255, 0.8);
+            animation: floatParticle linear infinite;
+        }
+
+        .particle:nth-child(1)  { width: 8px;  height: 8px;  left: 5%;  animation-duration: 3.5s; animation-delay: 0s; }
+        .particle:nth-child(2)  { width: 12px; height: 12px; left: 15%; animation-duration: 2.8s; animation-delay: 1.2s; }
+        .particle:nth-child(3)  { width: 6px;  height: 6px;  left: 25%; animation-duration: 4.0s; animation-delay: 0.5s; }
+        .particle:nth-child(4)  { width: 10px; height: 10px; left: 35%; animation-duration: 3.2s; animation-delay: 1.8s; }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(105vh) scale(0.4); opacity: 0; }
+            15%, 85% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.3); opacity: 0; }
+        }
+
+        /* --- TARJETA PRINCIPAL --- */
+        .main-card {
+            background: rgba(255, 255, 255, 0.94); 
+            border: 4.5px solid #5d3d8a; 
+            border-radius: 38px;
+            width: 94%;
+            max-width: 960px;
+            padding: 45px 35px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(93, 61, 138, 0.25); 
+            position: relative;
+            z-index: 3; 
+            animation: fadeInScale 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* TÍTULO PRINCIPAL */
+        h1 {
+            color: #4a3c63; 
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        /* --- PERRITO ASOMÁNDOSE ARRIBA A LA IZQUIERDA --- */
+        .dog-peek {
+            position: absolute;
+            top: -42px;
+            left: 60px;
+            width: 95px;
+            height: auto;
+            z-index: 4;
+            animation: movimientoSuave 3s ease-in-out infinite alternate;
+        }
+
+        /* --- CONTENEDOR DE DOS COLUMNAS (Reproductor | Carta) --- */
+        .content-layout {
+            display: flex;
+            justify-content: space-between;
+            gap: 25px;
+            align-items: stretch;
+        }
+
+        /* ================= ESTILO SPOTIFY ================= */
+        .spotify-player {
+            background: #181818;
+            border-radius: 20px;
+            width: 50%;
+            padding: 20px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: left;
+        }
+
+        .spotify-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        /* Mini carátula de álbumes en cuadrícula */
+        .album-grid {
+            width: 70px;
+            height: 70px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .album-grid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .playlist-info h2 {
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .playlist-info p {
+            color: #b3b3b3;
+            font-size: 0.8rem;
+        }
+
+        /* Controles de reproducción */
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 6px 0;
+        }
+
+        .time-current, .time-total {
+            color: #b3b3b3;
+            font-size: 0.72rem;
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            margin: 0 10px;
+            background: #404040;
+            height: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar {
+            background: #1db954;
+            width: 0%;
+            height: 100%;
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 6px;
+        }
+
+        .ctrl-btn {
+            background: none;
+            border: none;
+            color: #b3b3b3;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .ctrl-btn:hover { color: #fff; }
+
+        .play-pause-btn {
+            background: #1db954;
+            color: #000;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: transform 0.2s;
+        }
+        .play-pause-btn:hover { transform: scale(1.08); background: #1ed760; }
+
+        /* Lista de canciones estilo Spotify (ajustada para 10 temas) */
+        .song-list {
+            list-style: none;
+            max-height: 135px;
+            overflow-y: auto;
+            border-top: 1px solid #282828;
+            padding-top: 4px;
+        }
+
+        /* Estilo para la barra de desplazamiento de la lista */
+        .song-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        .song-list::-webkit-scrollbar-thumb {
+            background: #404040;
+            border-radius: 10px;
+        }
+
+        .song-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.8rem;
+            color: #b3b3b3;
+        }
+
+        .song-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        .song-item.active {
+            color: #1db954;
+            font-weight: 700;
+        }
+
+        .song-duration {
+            font-size: 0.72rem;
+        }
+
+
+        /* ================= ESTILO CARTA DERECHA ================= */
+        .love-letter-card {
+            background: #ffffff;
+            border: 3px solid #5d3d8a;
+            border-radius: 20px;
+            width: 50%;
+            padding: 22px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(93, 61, 138, 0.12);
+        }
+
+        .love-letter-card p {
+            color: #4a3c63;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+
+        /* --- BOTÓN DE REGRESO --- */
+        .back-btn {
+            position: absolute;
+            top: 22px;
+            right: 25px;
+            background: #5d3d8a;
+            color: white;
+            text-decoration: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(93, 61, 138, 0.3);
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+
+        .back-btn:hover {
+            background: #7e5fbf;
+            transform: scale(1.12) rotate(10deg);
+        }
+
+        /* --- ANIMACIONES --- */
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes movimientoSuave {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+
+        /* Responsive para celulares */
+        @media (max-width: 768px) {
+            .content-layout {
+                flex-direction: column;
+            }
+            .spotify-player, .love-letter-card {
+                width: 100%;
+            }
+            .dog-peek {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Partículas flotantes de fondo -->
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Contenedor Principal -->
+    <div class="main-card">
+        <!-- Perrito asomándose arriba a la izquierda -->
+        <img src="imagenes/gato2.gif" alt="Perrito asomándose" class="dog-peek">
+
+        <!-- Botón para volver al menú de los lirios -->
+        <a href="cards.html" class="back-btn" title="Volver">🏠</a>
+
+        <h1>NUESTRA PLAYLIST</h1>
+
+        <div class="content-layout">
+            
+            <!-- REPRODUCTOR ESTILO SPOTIFY -->
+            <div class="spotify-player">
+                <div class="spotify-header">
+                    <div class="album-grid">
+                        <img src="imagenes/album.gif" alt="Album 1">
+                        <img src="imagenes/album.gif" alt="Album 2">
+                        <img src="imagenes/album.gif" alt="Album 3">
+                        <img src="imagenes/album.gif" alt="Album 4">
+                    </div>
+                    <div class="playlist-info">
+                        <h2 id="current-playlist-title">Tyler Shaw - Love You Still</h2>
+                        <p>Jhosmer & Stephanie</p>
+                    </div>
+                </div>
+
+                <!-- Barra de progreso -->
+                <div class="player-controls">
+                    <span class="time-current" id="current-time">0:00</span>
+                    <div class="progress-bar-container" id="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    <span class="time-total" id="total-time">0:00</span>
+                </div>
+
+                <!-- Botones de control -->
+                <div class="control-buttons">
+                    <button class="ctrl-btn" id="prev-btn" title="Anterior">⏮</button>
+                    <button class="play-pause-btn" id="play-btn" title="Reproducir">▶</button>
+                    <button class="ctrl-btn" id="next-btn" title="Siguiente">⏭</button>
+                </div>
+
+                <!-- Lista de 10 canciones -->
+                <ul class="song-list" id="song-list">
+                    <li class="song-item active" data-src="musica/cancion1.mp3" data-title="Tyler Shaw - Love You Still">
+                        <span>1. Tyler Shaw - Love You Still <small style="color:#888; display:block;">Tyler Shaw</small></span>
+                        <span class="song-duration">02:31</span>
+                    </li>
+                    <li class="song-item" data-src="musica/cancion2.mp3" data-title="John Legend - All of Me">
+                        <span>2. John Legend All of me <small style="color:#888; display:block;">John Legend</small></span>
+                        <span class="song-duration">04:30</span>
+                    </li>
+                    <li class="song-item" data-src="musica/cancion3.mp3" data-title="Coldplay - Yellow">
+                        <span>3. Coldplay Yellow<small style="color:#888; display:block;">Coldplay Yellow</small></span>
+                        <span class="song-duration">04:31</span>
+                    </li>
+                    <li class="song-item" data-src="musica/cancion4.mp3" data-title="Elvis Presley - Can't Help Falling In Love">
+                        <span>4. Elvis Presley - Can't Help Falling In Love <small style="color:#888; display:block;">Elvis Presley</small></span>
+                        <span class="song-duration">03:06</span>
+                    </li>
+                    <li class="song-item" data-src="musica/cancion5.mp3" data-title="Harry Styles - Adore You">
+                        <span>5. Harry Styles - Adore You<small style="color:#888; display:block;">Harry Styles</small></span>
+                        <span class="song-duration">03:29</span>
+                    </li>
+                    <li class="song-item" data-src="musica/cancion6.mp3" data-title="Stephen Sanchez - Until I Found You">
+                        <span>6. until I found you  Stephen Sanchez ft<small style="color:#888; display:block;">Stephen Sanchez</small></span>
+                        <span class="song-duration">02:53</span>
+                    </li>
+                    <li class="song-item" data-src="musica/cancion7.mp3" data-title="Milo J - La Vida Era Más Corta">
+                        <span>7. Milo j - La Vida Era Más Corta <small style="color:#888; display:block;">Milo J</small></span>
+                        <span class="song-duration">03:15</span>
+                    </li>
+                    <li class="song-item" data-src="musica/cancion8.mp3" data-title="Milo J - Niño">
+                        <span>8. Milo J - Niño <small style="color:#888; display:block;">MiloJ</small></span>
+                        <span class="song-duration">03:30</span>
+                    </li>
+                    <li class="song-item" data-src="musica/cancion9.mp3" data-title="NF - Lost In The Moment">
+                        <span>9. NF - Lost In The Moment  <small style="color:#888; display:block;">NF</small></span>
+                        <span class="song-duration">04:02</span>
+                    </li>
+                    <li class="song-item" data-src="musica/cancion10.mp3" data-title="NF - RUNNING">
+                        <span>10. NF - RUNNING <small style="color:#888; display:block;">NF</small></span>
+                        <span class="song-duration">04:13</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- TARJETA DE CARTA ROMÁNTICA -->
+            <div class="love-letter-card">
+                <p>Dicen que la música es el idioma del alma, y quise hablarte en él. Las primeras seis canciones de esta lista llevan impreso todo lo que mi corazón siente por ti, dedicándote lo que me recuerda a tu mirada y a lo mucho que te adoro. Cada latido y cada pensamiento que me lleva a tu lado. Las cuatro siguientes son tus favoritas, esas melodías que ya forman parte de ti y que quise guardar aquí, no solo porque sé cuánto las amas, sino porque todo lo que te hace feliz me importa profundamente.</p>
+                <p>Cada acorde aquí tiene una sola misión: hacerte sonreír y recordarte que, sin importar los kilómetros, mi corazón late cerquita del tuyo. Esperando con ilusión el día en que podamos compartirlas y cantarlas juntos</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- AUDIO ELEMENT Y SCRIPT DE REPRODUCTOR -->
+    <audio id="audio-player"></audio>
+
+    <script>
+        const audio = document.getElementById('audio-player');
+        const playBtn = document.getElementById('play-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('progress-container');
+        const currentTimeEl = document.getElementById('current-time');
+        const totalTimeEl = document.getElementById('total-time');
+        const songItems = document.querySelectorAll('.song-item');
+        const playlistTitle = document.getElementById('current-playlist-title');
+
+        let currentSongIndex = 0;
+        let isPlaying = false;
+
+        // Cargar canción seleccionada
+        function loadSong(index) {
+            const song = songItems[index];
+            const src = song.getAttribute('data-src');
+            const title = song.getAttribute('data-title');
+            
+            audio.src = src;
+            playlistTitle.textContent = title;
+
+            songItems.forEach(item => item.classList.remove('active'));
+            song.classList.add('active');
+            currentSongIndex = index;
+        }
+
+        function togglePlay() {
+            if (isPlaying) {
+                audio.pause();
+                playBtn.textContent = '▶';
+                isPlaying = false;
+            } else {
+                audio.play().catch(e => {
+                    console.log("Nota: Coloca tus archivos mp3 reales en la carpeta 'musica/'");
+                });
+                playBtn.textContent = '⏸';
+                isPlaying = true;
+            }
+        }
+
+        playBtn.addEventListener('click', togglePlay);
+
+        // Seleccionar canción haciendo clic en la lista
+        songItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                loadSong(index);
+                audio.play();
+                playBtn.textContent = '⏸';
+                isPlaying = true;
+            });
+        });
+
+        // Siguiente y Anterior
+        nextBtn.addEventListener('click', () => {
+            currentSongIndex = (currentSongIndex + 1) % songItems.length;
+            loadSong(currentSongIndex);
+            if(isPlaying) audio.play();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentSongIndex = (currentSongIndex - 1 + songItems.length) % songItems.length;
+            loadSong(currentSongIndex);
+            if(isPlaying) audio.play();
+        });
+
+        // Actualizar barra de progreso y tiempos
+        audio.addEventListener('timeupdate', () => {
+            const { currentTime, duration } = audio;
+            if(duration) {
+                const progressPercent = (currentTime / duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+
+                // Tiempo actual formateado
+                let currentMinutes = Math.floor(currentTime / 60);
+                let currentSeconds = Math.floor(currentTime % 60);
+                if(currentSeconds < 10) currentSeconds = `0${currentSeconds}`;
+                currentTimeEl.textContent = `${currentMinutes}:${currentSeconds}`;
+
+                // Duración total formateada
+                let totalMinutes = Math.floor(duration / 60);
+                let totalSeconds = Math.floor(duration % 60);
+                if(totalSeconds < 10) totalSeconds = `0${totalSeconds}`;
+                totalTimeEl.textContent = `${totalMinutes}:${totalSeconds}`;
+            }
+        });
+
+        // Permitir hacer click en la barra para adelantar o retrasar
+        progressContainer.addEventListener('click', (e) => {
+            const width = progressContainer.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            if(duration) {
+                audio.currentTime = (clickX / width) * duration;
+            }
+        });
+
+        // Al terminar la canción, pasa a la siguiente automáticamente
+        audio.addEventListener('ended', () => {
+            nextBtn.click();
+        });
+
+        // Cargar la primera por defecto
+        loadSong(0);
+    </script>
+</body>
+</html>

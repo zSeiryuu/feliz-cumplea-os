@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Galaxia de Amor - I LOVE YOU</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      overflow: hidden;
+      background: radial-gradient(circle at center, #0a0026 0%, #000 80%);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    .container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      text-align: center;
+      padding: 20px;
+      width: 95%;
+      max-width: 1100px;
+    }
+
+    /* === Texto central ENORME === */
+    .love-text {
+      font-size: 7.5rem;
+      font-weight: 900;
+      letter-spacing: 10px;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      word-break: break-word;
+      line-height: 1.1;
+    }
+    .love-text span {
+      display: inline-block;
+      opacity: 0;
+      transform: scale(0.5) rotate(0deg);
+      text-shadow: 0 0 25px #fff, 0 0 50px #ff006a, 0 0 100px #ff00ff;
+    }
+
+    /* === Frase inferior === */
+    .phrase {
+      margin-top: 20px;
+      font-size: 1.6rem;
+      color: #ddd;
+      opacity: 0;
+      animation: floatText 6s ease-in-out infinite;
+    }
+
+    /* === Botón interactivo mejorado === */
+    .action-btn {
+      margin-top: 35px;
+      background: linear-gradient(135deg, #7e5fbf, #ff007f);
+      border: 2px solid #ffb3f0;
+      padding: 16px 45px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer;
+      color: #ffffff;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(255, 0, 127, 0.5);
+      text-decoration: none;
+      display: inline-block;
+      opacity: 0;
+      animation: fadeInBtn 1.5s ease-out forwards;
+      animation-delay: 1.2s;
+    }
+
+    .action-btn:hover {
+      background: linear-gradient(135deg, #9570df, #ff2a92);
+      transform: translateY(-4px) scale(1.08);
+      box-shadow: 0 12px 35px rgba(255, 0, 127, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
+    }
+
+    .action-btn:active {
+      transform: translateY(-1px) scale(1.02);
+    }
+
+    @keyframes fadeInBtn {
+      to { opacity: 1; }
+    }
+
+    /* === Corazones flotantes === */
+    .heart {
+      position: absolute;
+      font-size: 1.4rem;
+      opacity: 0.8;
+      color: #ff6ec7;
+      animation: floatHeart 6s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes floatHeart {
+      0% { transform: translateY(0) scale(1); opacity: 0.8; }
+      50% { transform: translateY(-40px) scale(1.2); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 0.8; }
+    }
+
+    @keyframes floatText {
+      0% { transform: translateY(0px); opacity: 0.6; }
+      50% { transform: translateY(-15px); opacity: 1; }
+      100% { transform: translateY(0px); opacity: 0.6; }
+    }
+
+    /* === Responsividad === */
+    @media (max-width: 768px) {
+      .love-text {
+        font-size: 4rem;
+        letter-spacing: 6px;
+      }
+      .phrase {
+        font-size: 1.2rem;
+      }
+      .action-btn {
+        font-size: 1.1rem;
+        padding: 14px 35px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .love-text {
+        font-size: 3rem;
+        letter-spacing: 4px;
+      }
+      .phrase {
+        font-size: 1rem;
+      }
+      .action-btn {
+        font-size: 1rem;
+        padding: 12px 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="stars"></canvas>
+
+  <div class="container">
+    <div class="love-text" id="loveText">I LOVE YOU</div>
+    <div class="phrase" id="phrase">💖 You are my universe 💫</div>
+    <a href="heart.html" class="action-btn">Continuar Sorpresa ✨</a>
+  </div>
+
+  <script>
+    // === GALAXIA DE PARTÍCULAS ===
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    for (let i = 0; i < 350; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2,
+        d: Math.random() * 1.5,
+        color: `hsl(${Math.random() * 360}, 100%, 70%)`
+      });
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, false);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      });
+      updateParticles();
+      requestAnimationFrame(drawParticles);
+    }
+
+    function updateParticles() {
+      particles.forEach(p => {
+        p.y += p.d;
+        p.x += Math.sin(p.y * 0.02);
+        if (p.y > canvas.height) {
+          p.y = 0;
+          p.x = Math.random() * canvas.width;
+        }
+      });
+    }
+    drawParticles();
+
+    // === TEXTO "I LOVE YOU" ANIMADO ===
+    const textEl = document.getElementById('loveText');
+    textEl.innerHTML = textEl.textContent.replace(/\S/g, "<span>$&</span>");
+
+    anime.timeline()
+      .add({
+        targets: '.love-text span',
+        opacity: [0, 1],
+        scale: [0.5, 1.3, 1],
+        rotate: () => anime.random(-15, 15) + 'deg',
+        color: [
+          { value: '#ff007f' },
+          { value: '#00ffff' },
+          { value: '#ffffff' }
+        ],
+        textShadow: [
+          { value: '0 0 10px #ff00ff' },
+          { value: '0 0 30px #00ffff' },
+          { value: '0 0 50px #ff007f' }
+        ],
+        easing: 'easeOutElastic(1, .8)',
+        duration: 1800,
+        delay: anime.stagger(150)
+      })
+      .add({
+        targets: '.love-text span',
+        translateY: [
+          { value: -10, duration: 1000, easing: 'easeInOutSine' },
+          { value: 0, duration: 1000, easing: 'easeInOutSine' }
+        ],
+        loop: true
+      });
+
+    // === FRASES ROMÁNTICAS ===
+    const phrases = [
+      "💫 You light up my galaxy 💞",
+      "🌙 My heart orbits around you 💖",
+      "🌌 Together, we’re infinite 💕",
+      "💘 You are my brightest star ✨",
+      "❤️ Love is our universe 🌠"
+    ];
+    function changePhrase() {
+      const phraseEl = document.getElementById('phrase');
+      phraseEl.style.opacity = 0;
+      setTimeout(() => {
+        phraseEl.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+        phraseEl.style.opacity = 1;
+      }, 800);
+    }
+    setInterval(changePhrase, 4000);
+
+    // === CORAZONES FLOTANTES ===
+    const heartEmojis = ['💖', '💜', '💙', '💗', '💞', '💫', '💛'];
+    for (let i = 0; i < 20; i++) {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.top = Math.random() * 100 + '%';
+      heart.style.animationDelay = Math.random() * 6 + 's';
+      heart.style.opacity = 0.5 + Math.random() * 0.5;
+      heart.style.transform = `scale(${0.8 + Math.random() * 0.6})`;
+      document.body.appendChild(heart);
+    }
+  </script>
+</body>
+</html>
